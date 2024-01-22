@@ -57,8 +57,7 @@ def precipitation():
   link1 = []
   for date, prcp in prcp_data:
     dict1= {}
-    dict1['date'] = date
-    dict1['prcp'] = prcp
+    dict1[date] = prcp
     link1.append(dict1)
 
   return(jsonify(link1))
@@ -108,16 +107,16 @@ def tobs():
 @app.route("/api/v1.0/<start>")
 def startwith(start):
   session = Session(bind = engine)
-  start_results = session.query(Measurement.date, func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs))\
-                  .filter(Measurement.date >= start)\
-                  .group_by(Measurement.date).all()
+  start_results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs))\
+                  .filter(Measurement.date >= start)
+                  
   session.close()
 
   link4 = []
 
-  for date, min, avg, max in start_results:
+  for min, avg, max in start_results:
     dict3 = {}
-    dict3['date'] = date
+    
     dict3['min'] = min
     dict3['avg'] = avg
     dict3['max'] = max
@@ -128,17 +127,15 @@ def startwith(start):
 @app.route("/api/v1.0/<start>/<end>")
 def startendwith(start,end):
   session = Session(bind = engine)
-  start_end_results = session.query(Measurement.date, func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs))\
+  start_end_results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs))\
                   .filter(Measurement.date >= start)\
-                  .filter(Measurement.date <= end)\
-                  .group_by(Measurement.date).all()
+                  .filter(Measurement.date <= end)
   session.close()
 
   link5 = []
 
-  for date, min, avg, max in start_end_results:
+  for min, avg, max in start_end_results:
     dict4 = {}
-    dict4['date'] = date
     dict4['min'] = min
     dict4['avg'] = avg
     dict4['max'] = max
