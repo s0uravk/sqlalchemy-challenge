@@ -120,6 +120,7 @@ def startwith(start):
     dict3['min'] = min
     dict3['avg'] = avg
     dict3['max'] = max
+    
     link4.append(dict3)
 
   return(jsonify(link4))
